@@ -15,6 +15,7 @@
                 <h3>{{ $book->title }}</h3>
                 <p>Author: {{ $book->author }}</p>
                 <p>Status: {{ $book->status }}</p>
+<a href="{{ route('books.edit', $book) }}">Edit</a>
             </div>
             <hr>
         @endforeach
