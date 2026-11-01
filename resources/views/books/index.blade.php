@@ -55,7 +55,7 @@
             <div>
                 <h3>{{ $book->title }}</h3>
                 <p>Author: {{ $book->author }}</p>
-                <p>Status: {{ $book->status }}</p>
+                <p>Status: {{ ucwords(str_replace('-', ' ', $book->status)) }}</p>
 
                 <a href="{{ route('books.edit', $book) }}">Edit</a>
 
