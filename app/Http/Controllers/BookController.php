@@ -7,10 +7,16 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    // Display all books
-    public function index()
+    // Display books with optional status filter
+    public function index(Request $request)
     {
-        $books = Book::latest()->get();
+        $query = Book::query();
+
+        if (in_array($request->status, ['to-read', 'reading', 'finished'])) {
+            $query->where('status', $request->status);
+        }
+
+        $books = $query->latest()->get();
 
         return view('books.index', compact('books'));
     }

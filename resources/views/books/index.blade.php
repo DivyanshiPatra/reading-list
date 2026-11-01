@@ -7,6 +7,13 @@
 
     <h1>My Reading List</h1>
 
+    <p>
+        <a href="{{ route('books.index') }}">All</a> |
+        <a href="{{ route('books.index', ['status' => 'to-read']) }}">To Read</a> |
+        <a href="{{ route('books.index', ['status' => 'reading']) }}">Reading</a> |
+        <a href="{{ route('books.index', ['status' => 'finished']) }}">Finished</a>
+    </p>
+
     <a href="{{ route('books.create') }}">Add New Book</a>
 
     <br><br>
@@ -16,7 +23,7 @@
     @endif
 
     @if($books->isEmpty())
-        <p>No books yet</p>
+        <p>No books found.</p>
     @else
         @foreach($books as $book)
             <div>
@@ -34,7 +41,6 @@
 
                     <button type="submit">Delete</button>
                 </form>
-
             </div>
             <hr>
         @endforeach
