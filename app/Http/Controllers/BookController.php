@@ -7,27 +7,40 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    // Display books with optional status filter
     public function index(Request $request)
     {
         $query = Book::query();
 
+        // Filter by status
         if (in_array($request->status, ['to-read', 'reading', 'finished'])) {
             $query->where('status', $request->status);
         }
 
+        // Search by title or author
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('author', 'like', "%{$search}%");
+            });
+        }
+
         $books = $query->latest()->get();
 
-        return view('books.index', compact('books'));
+        // Count books in each status
+        $statusCounts = Book::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return view('books.index', compact('books', 'statusCounts'));
     }
 
-    // Show the Add Book form
     public function create()
     {
         return view('books.create');
     }
 
-    // Save a new book
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -42,13 +55,11 @@ class BookController extends Controller
             ->with('success', 'Book added successfully!');
     }
 
-    // Show the Edit Book form
     public function edit(Book $book)
     {
         return view('books.edit', compact('book'));
     }
 
-    // Update an existing book
     public function update(Request $request, Book $book)
     {
         $validated = $request->validate([
@@ -63,7 +74,6 @@ class BookController extends Controller
             ->with('success', 'Book updated successfully!');
     }
 
-    // Delete a book
     public function destroy(Book $book)
     {
         $book->delete();

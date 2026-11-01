@@ -7,6 +7,32 @@
 
     <h1>My Reading List</h1>
 
+    <h3>Book Summary</h3>
+
+    <p>To Read: {{ $statusCounts['to-read'] ?? 0 }}</p>
+    <p>Reading: {{ $statusCounts['reading'] ?? 0 }}</p>
+    <p>Finished: {{ $statusCounts['finished'] ?? 0 }}</p>
+
+    <hr>
+
+    <h3>Search Books</h3>
+
+    <form action="{{ route('books.index') }}" method="GET">
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by title or author"
+            value="{{ request('search') }}"
+        >
+
+        @if(request('status'))
+            <input type="hidden" name="status" value="{{ request('status') }}">
+        @endif
+
+        <button type="submit">Search</button>
+        <a href="{{ route('books.index') }}">Clear</a>
+    </form>
+
     <p>
         <a href="{{ route('books.index') }}">All</a> |
         <a href="{{ route('books.index', ['status' => 'to-read']) }}">To Read</a> |
